@@ -1,0 +1,39 @@
+version: '3.7'
+
+services:
+  drupal:
+    image: drupal:latest
+    container_name: drupal
+    restart: always
+    ports:
+      - "8080:80"
+    networks:
+      - drupal_network
+    environment:
+      - DRUPAL_DB_HOST=postgres
+      - DRUPAL_DB_NAME=drupal
+      - DRUPAL_DB_USER=drupaluser
+      - DRUPAL_DB_PASSWORD=drupalpassword
+    volumes:
+      - drupal_data:/var/www/html
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    restart: always
+    networks:
+      - drupal_network
+    environment:
+      - POSTGRES_DB=drupal
+      - POSTGRES_USER=drupaluser
+      - POSTGRES_PASSWORD=drupalpassword
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+networks:
+  drupal_network:
+    driver: bridge
+
+volumes:
+  drupal_data:
+  postgres_data:
